@@ -1,0 +1,253 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Dispositivos</title>
+        <f:event type="preRenderView" listener="#{controladorSesionBean.verificarEstadoSesion()}" />
+        <link href="../recursos/css/cssGeneral.css" rel="stylesheet" type="text/css"/>
+        <script src="../recursos/js/jslocale.js" type="text/javascript"></script>
+        <script src="../recursos/js/reload.js" type="text/javascript"></script>
+    </h:head>
+    <h:body>
+        <div id="cabecerappal">
+            <div id="cabecera1">                
+
+                <img src="../../recursos/images/Logo.png"
+                     style="max-width: 55%;
+                     max-height: 55%;
+                     border-radius: 5px;"
+                     alt=""/>    
+            </div>            
+        </div>
+        <div class="card">
+            <h:form>
+                <p:menubar>
+                    <p:submenu label="Prestamos" icon="pi pi-book">
+                        <p:submenu label="Maestras" icon="pi pi-fw pi-plus">
+                            <p:menuitem value="Dependencias" icon="pi pi-building" url="admindependencia.xhtml"/>
+                            <p:menuitem value="Dispositivo" icon="pi pi-desktop" url="admindispositivo.xhtml"/>
+                            <p:menuitem value="Marca" icon="pi pi-briefcase" url="adminmarca.xhtml"/>
+                        </p:submenu>
+                        <p:menuitem value="Devolución" icon="pi pi-flag" url="devoluciones.xhtml"/>
+                        <p:divider />
+                        <p:menuitem value="Consultas" icon="pi pi-search" url="consultas.xhtml"/>
+                    </p:submenu>
+
+                    <p:submenu label="Usuarios" icon="pi pi-users">
+                        <p:menuitem value="Gestión" icon="pi pi-user-plus" url="usuarios.xhtml"/>                      
+                    </p:submenu>
+
+                    <p:divider layout="vertical"/>
+
+                    <p:menuitem value="Quit" icon="pi pi-fw pi-power-off"
+                                action="#{loginBean.cerrarSesion()}"
+                                />
+                </p:menubar>
+            </h:form>
+        </div>
+        <div id="contenedor_central_ppal">
+            <p:messages id="msgs" showDetail="true"  />
+            <center>
+                <h1>Gestión de dispositivos</h1>
+                <h:form id="formnuevodispositivo">
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                <p:outputLabel value="Nombre dispositivo"/>
+                            </p:column>
+                            <p:column style="min-width: 200px;">
+                                <p:inputText id="nombredispositivo" 
+                                             styleClass="anchoColumnasPrincipal"
+                                             value="#{dispositivoBean.dentidad.nombredispositivo}"
+                                             required="true">                                    
+                                    <f:validateRegex pattern="^([\w\.\-\ñÑáéíóúÁÉÍÓÚ]*( [\w\.\-\ñÑáéíóúÁÉÍÓÚ]*)*)" ></f:validateRegex>
+                                    <p:ajax  update="msgnombredispositivo"  event="keyup"/>                            
+                                </p:inputText> 
+                                <p:message id="msgnombredispositivo" for="nombredispositivo" display="icon"  />
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                <p:outputLabel value="Código activo"/>
+                            </p:column>
+                            <p:column style="min-width: 200px;">
+                                <p:inputText id="codigoactivo" 
+                                             styleClass="anchoColumnasPrincipal"
+                                             value="#{dispositivoBean.dentidad.codigoactivo}"
+                                             required="true">                                    
+                                    <f:validateRegex pattern="^([\w\.\-\ñÑáéíóúÁÉÍÓÚ]*( [\w\.\-\ñÑáéíóúÁÉÍÓÚ]*)*)" ></f:validateRegex>
+                                    <p:ajax  update="msgcodigoactivo"  event="keyup"/>                            
+                                </p:inputText> 
+                                <p:message id="msgcodigoactivo" for="codigoactivo" display="icon"  />
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                <p:outputLabel value="Estado dispositivo"/>
+                            </p:column>
+                            <p:column style="min-width: 200px;">
+                                <p:selectBooleanCheckbox
+                                    id="estadodispositivo"
+                                    value="#{dispositivoBean.dentidad.estadodispositivo}"
+                                    />
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                <p:outputLabel value="Disponible para prestamo"/>
+                            </p:column>
+                            <p:column style="min-width: 200px;">
+                                <p:selectBooleanCheckbox
+                                    id="disponibledispositivo"
+                                    value="#{dispositivoBean.dentidad.disponibledispositivo}"
+                                    />
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                    <br />
+                    <p:commandButton value="Guardar"
+                                     icon="pi pi-save"
+                                     update="formnuevodispositivo tablagestiondispositivos msgs"
+                                     action="#{dispositivoBean.insertarNuevoDispositivo()}" />
+                </h:form>
+                <br />
+                <br />
+                <h:form id="tablagestiondispositivos">
+                    <h3>Dispositivos Existentes:</h3> 
+                    <p:commandButton icon="pi pi-refresh"
+                                     value="Actualizar Tabla"
+                                     ajax="false"
+                                     onclick="PrimeFaces.monitorDownload(start, stop);"
+                                     actionListener="#{dispositivoBean.cargarListaCompletoDispositivos()}"
+                                     update="tablagestiondispositivos" />               
+                    <br />
+                    <br />
+                    <p:dataTable var="maestradispositivos" 
+                                 value="#{dispositivoBean.listadispositivos}"
+                                 stickyHeader="false"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                 rowsPerPageTemplate="5,10,15"
+                                 >
+                        <p:column headerText="ID" >
+                            <h:outputText value="#{maestradispositivos.idregistro}" />
+                        </p:column>
+
+                        <p:column headerText="Nombre" 
+                                  >
+                            <h:outputText value="#{maestradispositivos.nombredispositivo}" />
+                        </p:column>
+                        <p:column headerText="Código activo" 
+                                  >
+                            <h:outputText value="#{maestradispositivos.codigoactivo}" />
+                        </p:column>
+                        <p:column headerText="Estado" filterBy="#{maestradispositivos.estadodispositivo}"
+                                  >
+                            <h:outputText value="#{maestradispositivos.estadodispositivo}" />
+                        </p:column>
+                        <p:column headerText="Disponible prestamo" 
+                                  filterBy="#{maestradispositivos.disponibledispositivo}"
+                                  >
+                            <h:outputText value="#{maestradispositivos.disponibledispositivo}" />
+                        </p:column>
+                        <p:column headerText="Acciones" >
+                            <center>
+                                <p:commandButton 
+                                    ajax="false"
+                                    icon="pi pi-pencil"
+                                    title="Editar"
+                                    style="margin-right: 7px;"
+                                    actionListener="#{dispositivoBean.cargarVentanaEditar(maestradispositivos)}"
+                                    >
+
+                                </p:commandButton>
+
+                                <p:commandButton icon="pi pi-trash"
+                                                 ajax="false"
+                                                 title="Eliminar"
+                                                 actionListener="#{dispositivoBean.cargarVentanaEliminar(maestradispositivos)}"
+                                                 />
+                            </center>
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+                <p:panel rendered="#{dispositivoBean.paneleditar}">
+                    <h:form id="formeditardispositivo">
+                        <h2>Registro a modificar</h2>
+                        <p:panelGrid columns="2" style="border: transparent;" >
+                            <p:outputLabel value="Id:" />
+                            <p:inputText readonly="true" value="#{dispositivoBean.dentidadeditar.idregistro}" />
+                            <p:outputLabel value="Nombre: " />
+                            <p:inputText value="#{dispositivoBean.dentidadeditar.nombredispositivo}"
+                                         required="true"
+                                         >
+                                <f:validateRequired />
+                                <f:validateRegex pattern="^([\w\d\%\°\,\+\.\-áéíóúÁÉÍÓÚñ]*)( [\w\d\%\°\,\+\.\-áéíóúÁÉÍÓÚñ]*)*" />
+                            </p:inputText>  
+                            <p:outputLabel value="Código activo " />
+                            <p:inputText 
+                                value="#{dispositivoBean.dentidadeditar.codigoactivo}"
+                                required="true">                                    
+                                <f:validateRegex pattern="^([\w\.\-\ñÑáéíóúÁÉÍÓÚ]*( [\w\.\-\ñÑáéíóúÁÉÍÓÚ]*)*)" ></f:validateRegex>
+
+                            </p:inputText>
+                            <p:outputLabel value="Estado: "/>
+                            <p:selectBooleanCheckbox
+                                value="#{dispositivoBean.dentidadeditar.estadodispositivo}"
+                                />
+                            <p:outputLabel value="Disponible prestamo "/>
+                            <p:selectBooleanCheckbox
+                                value="#{dispositivoBean.dentidadeditar.disponibledispositivo}"
+                                />
+
+
+                        </p:panelGrid>
+                        <br />
+                        <br />
+                        <center>
+                            <p:commandButton  
+                                icon="pi pi-check"
+                                ajax="false"
+                                title="Guardar"
+                                actionListener="#{dispositivoBean.actualizarDispositivo()}"
+                                >
+
+                            </p:commandButton>
+                        </center>
+                    </h:form>
+                </p:panel>
+                <p:panel rendered="#{dispositivoBean.paneleliminar}">
+                    <h:form id="formeliminarmarca">
+                        <h2>Eliminación de registro</h2>
+                        <h3>¿Seguro que desea eliminar el dispositivo </h3>
+                        <p:outputLabel value="#{dispositivoBean.dentidadeliminar.nombredispositivo}" />
+                        <p:outputLabel value="?" />
+                        <br />
+                        <br />
+                        <center>
+                            <p:commandButton  icon="pi pi-check"
+                                              ajax="false"
+                                              title="Si"
+                                              action="#{dispositivoBean.eliminarDispositivo()}"
+                                              >
+
+                            </p:commandButton>
+
+                        </center>
+                    </h:form>
+                </p:panel>                
+            </center>
+
+
+        </div>
+        <div id="bottom">
+            Bottom
+        </div>
+    </h:body>    
+</html>
+

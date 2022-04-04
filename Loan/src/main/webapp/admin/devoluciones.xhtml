@@ -1,0 +1,325 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Devoluciones</title>
+        <f:event type="preRenderView" listener="#{controladorSesionBean.verificarEstadoSesion()}" />
+        <link href="../recursos/css/cssGeneral.css" rel="stylesheet" type="text/css"/>
+        <script src="../recursos/js/jslocale.js" type="text/javascript"></script>
+        <script src="../recursos/js/reload.js" type="text/javascript"></script>
+    </h:head>
+    <h:body>
+        <div id="cabecerappal">
+            <div id="cabecera1">                
+
+                <img src="../../recursos/images/Logo.png"
+                     style="max-width: 55%;
+                     max-height: 55%;
+                     border-radius: 5px;"
+                     alt=""/>    
+            </div>            
+        </div>
+        <div class="card">
+            <h:form>
+                <p:menubar>
+                    <p:submenu label="Prestamos" icon="pi pi-book">
+                        <p:submenu label="Maestras" icon="pi pi-fw pi-plus">
+                            <p:menuitem value="Dependencias" icon="pi pi-building" url="admindependencia.xhtml"/>
+                            <p:menuitem value="Dispositivo" icon="pi pi-desktop" url="admindispositivo.xhtml"/>
+                            <p:menuitem value="Marca" icon="pi pi-briefcase" url="adminmarca.xhtml"/>
+                        </p:submenu>
+                        <p:menuitem value="Devolución" icon="pi pi-flag" url="devoluciones.xhtml"/>
+                        <p:divider />
+                        <p:menuitem value="Consultas" icon="pi pi-search" url="consultas.xhtml"/>
+                    </p:submenu>
+
+                    <p:submenu label="Usuarios" icon="pi pi-users">
+                        <p:menuitem value="Gestión" icon="pi pi-user-plus" url="usuarios.xhtml"/>                       
+                    </p:submenu>
+
+                    <p:divider layout="vertical"/>
+
+                    <p:menuitem value="Quit" icon="pi pi-fw pi-power-off"
+                                action="#{loginBean.cerrarSesion()}"
+                                />
+                </p:menubar>
+            </h:form>
+        </div>
+        <div id="contenedor_central_ppal">
+            <p:messages id="msgs" showDetail="true"  />
+            <center>
+                <h1>Gestión de devoluciones</h1>                
+                <br />
+                <h:form id="tablaprestamospendientes">
+                    <p:commandButton icon="pi pi-refresh"
+                                     value="Actualizar Tabla"
+                                     ajax="false"
+                                     onclick="PrimeFaces.monitorDownload(start, stop);"
+                                     action="#{prestamoBean.cargarListaPrestamosPendienteDevolucion()}"
+                                     update="tablaprestamospendientes" />               
+                    <br />
+                    <br />
+                    <p:dataTable var="prestamosactivos" 
+                                 value="#{prestamoBean.listaprestamospendientedevolucion}"
+                                 stickyHeader="false"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                 rowsPerPageTemplate="5,10,15"
+                                 >
+                        <p:column headerText="ID" >
+                            <h:outputText value="#{prestamosactivos.idregistro}" />
+                        </p:column>
+
+                        <p:column headerText="Nombre completo" 
+                                  filterBy="#{prestamosactivos.nombrecompletoprestamo}"
+                                  
+                                  >
+                            <h:outputText value="#{prestamosactivos.nombrecompletoprestamo}" />
+                        </p:column>
+                        <p:column headerText="Dispositivo" 
+                                  >
+                            <h:outputText value="#{prestamosactivos.dispositivo}" />
+                        </p:column>
+                        <p:column headerText="Fecha - Hora prestamo" 
+                                  filterBy="#{prestamosactivos.datetimeprestamo}"
+                                  >
+                            <h:outputText value="#{prestamosactivos.datetimeprestamo}" />
+                        </p:column>
+                        <p:column headerText="Dependencia" 
+                                  filterBy="#{prestamosactivos.dependencia}"
+                                  >
+                            <h:outputText value="#{prestamosactivos.dependencia}" />
+                        </p:column>
+                        <p:column headerText="Acciones" >
+                            <center>
+                                <p:commandButton 
+                                    ajax="false"
+                                    icon="pi pi-pencil"
+                                    title="Editar"
+                                    style="margin-right: 7px;"
+                                    actionListener="#{prestamoBean.mostrarPanelRegistroDevolucion(prestamosactivos)}"
+                                    >
+
+                                </p:commandButton>
+
+                                <p:commandButton icon="pi pi-trash"
+                                                 ajax="false"
+                                                 title="Eliminar"
+                                                 actionListener="#{prestamoBean.mostrarPanelAnularPrestamo(prestamosactivos)}"
+                                                 />
+                            </center>
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+                <p:panel rendered="#{prestamoBean.panelregistrodevolucion}">
+                    <h:form id="formregistrodevolucion">
+                        <h2>Registrar devolución - Registro seleccionado</h2>
+                        <p:messages id="msgsdevolucion" showDetail="true" />
+                        <p:panelGrid style="border: transparent;" >
+                            <p:row>
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Id:" />
+                                </p:column>
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Nombre persona prestamo: " />
+                                </p:column>
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Dispositivo" />
+                                </p:column>                                
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Fecha y hora" />
+                                </p:column>       
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Marca" />
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <p:inputText readonly="true" value="#{prestamoBean.pentidad.idregistro}" />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText value="#{prestamoBean.pentidad.nombrecompletoprestamo}"
+                                                 readonly="true"/> 
+                                </p:column>
+                                <p:column>
+                                    <p:inputText 
+                                        value="#{prestamoBean.pentidad.dispositivo}"
+                                        readonly="true"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel value="#{prestamoBean.pentidad.datetimeprestamo}" />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText 
+                                        value="#{prestamoBean.pentidad.marca}"
+                                        readonly="true"/> 
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <br />
+                        <p:outputLabel value="Firma prestamo "/>
+                        <br />
+                        <p:signature style="width:400px;height:200px;" value="#{prestamoBean.pentidad.firmaprestamo}" 
+                                     readonly="true"
+                                     rendered="#{not empty prestamoBean.pentidad.firmaprestamo}" 
+                                     backgroundColor="#eaeaea" color="#03a9f4"/>
+                        <br />
+                        <p:panelGrid>
+                            <p:row>
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Nombre Persona devuelve" />
+                                </p:column>
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Firma devolución" />
+                                </p:column>
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Observaciones devolución" />
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <p:inputText id="nombrecompletodevolucion" 
+                                                 styleClass="anchoColumnasPrincipal"
+                                                 value="#{prestamoBean.pentidad.nombrecompletodevolucion}"
+                                                 required="true">                                    
+                                        <f:validateRegex pattern="^([\w\.\-ñÑáéíóúÁÉÍÓÚ]*( [\w\.\-ñÑáéíóúÁÉÍÓÚ]*))*" ></f:validateRegex>
+                                        <p:ajax  update="msgnombrecompletodevolucion"  event="keyup"/>                            
+                                    </p:inputText> 
+                                    <p:message id="msgnombrecompletodevolucion" for="nombrecompletodevolucion" display="icon"  />
+                                </p:column>
+                                <p:column>
+                                    <p:signature style="width:400px;height:200px" widgetVar="sig" value="#{prestamoBean.pentidad.firmadevolucion}"
+                                                 required="true" guideline="true"/>
+
+                                    <div style="margin:20px 0">                                
+                                        <p:commandButton value="Limpiar firma" icon="pi pi-times" type="button" onclick="PF('sig').clear()" styleClass="ui-button-flat p-ml-2"/>
+                                    </div>
+                                </p:column>
+                                <p:column>
+                                    <p:inputTextarea 
+                                        maxlength="500" 
+                                        id="observacionesdevolucion"
+                                        value="#{prestamoBean.pentidad.observacionesdevolucion}"
+                                        style="width: 70%;"
+                                        >
+                                        <f:validateRegex pattern="^([\w\d\%\°\,\+\.\-áéíóúÁÉÍÓÚñÑ]*)( [\w\d\%\°\,\+\.\-áéíóúÁÉÍÓÚñÑ]*)*" />
+                                        <p:ajax  update="msgobservacionesdevolucion"  event="keyup"/> 
+                                    </p:inputTextarea>
+                                    <p:message id="msgobservacionesdevolucion" for="observacionesdevolucion" display="icon" />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <center>
+                            <p:commandButton  
+                                icon="pi pi-check"
+                                ajax="false"
+                                title="Guardar"
+                                actionListener="#{prestamoBean.registrarDevolucion()}"
+                                >
+
+                            </p:commandButton>
+                        </center>
+                    </h:form>
+                </p:panel>
+                <p:panel rendered="#{prestamoBean.panelanularprestamo}">
+                    <h:form id="formanularprestamo">
+                        <h2>Anulación de registro - Datos selección</h2>
+                        <p:panelGrid style="border: transparent;" >
+                            <p:row>
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Id:" />
+                                </p:column>
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Nombre persona prestamo: " />
+                                </p:column>
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Dispositivo" />
+                                </p:column>
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Marca" />
+                                </p:column>
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Fecha y hora" />
+                                </p:column>                                
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <p:inputText readonly="true" value="#{prestamoBean.pentidad.idregistro}" />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText value="#{prestamoBean.pentidad.nombrecompletoprestamo}"
+                                                 readonly="true"/> 
+                                </p:column>
+                                <p:column>
+                                    <p:inputText 
+                                        value="#{prestamoBean.pentidad.dispositivo}"
+                                        readonly="true"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel value="#{prestamoBean.pentidad.datetimeprestamo}" />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText 
+                                        value="#{prestamoBean.pentidad.marca}"
+                                        readonly="true"/> 
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <br />
+                        <p:outputLabel value="Firma prestamo "/>
+                        <br />
+                        <p:signature style="width:400px;height:200px;" value="#{prestamoBean.pentidad.firmaprestamo}" 
+                                     readonly="true"
+                                     rendered="#{not empty prestamoBean.pentidad.firmaprestamo}" 
+                                     backgroundColor="#eaeaea" color="#03a9f4"/>
+                        <br />
+                        <p:panelGrid>
+                            <p:row>                                
+                                <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                    <p:outputLabel value="Observaciones anulado*" />
+                                </p:column>
+                            </p:row>
+                            <p:row>                                
+                                <p:column>
+                                    <p:inputTextarea 
+                                        maxlength="500" 
+                                        id="observacionesanulado"
+                                        value="#{prestamoBean.pentidad.observacionesanulado}"
+                                        style="width: 70%;"
+                                        required="true"
+                                        >
+                                        <f:validateRegex pattern="^([\w\d\%\°\,\+\.\-áéíóúÁÉÍÓÚñÑ]*)( [\w\d\%\°\,\+\.\-áéíóúÁÉÍÓÚñÑ]*)*" />
+                                        <p:ajax  update="msgobservacionesanulado"  event="keyup"/> 
+                                    </p:inputTextarea>
+                                    <p:message id="msgobservacionesanulado" for="observacionesanulado" display="icon" />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <center>
+                            <p:commandButton  
+                                icon="pi pi-check"
+                                ajax="false"
+                                title="Guardar"
+                                actionListener="#{prestamoBean.anularPrestamo()}"
+                                >
+
+                            </p:commandButton>
+                        </center>
+                        
+                    </h:form>
+                </p:panel>                
+            </center>
+
+
+        </div>
+        <div id="bottom">
+            Bottom
+        </div>
+    </h:body>    
+</html>
+

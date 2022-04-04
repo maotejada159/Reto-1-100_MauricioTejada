@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Dependencias</title>
+        <f:event type="preRenderView" listener="#{controladorSesionBean.verificarEstadoSesion()}" />
+        <link href="../recursos/css/cssGeneral.css" rel="stylesheet" type="text/css"/>
+        <script src="../recursos/js/jslocale.js" type="text/javascript"></script>
+        <script src="../recursos/js/reload.js" type="text/javascript"></script>
+    </h:head>
+    <h:body>
+        <div id="cabecerappal">
+            <div id="cabecera1">                
+
+                <img src="../../recursos/images/Logo.png"
+                     style="max-width: 55%;
+                     max-height: 55%;
+                     border-radius: 5px;"
+                     alt=""/>    
+            </div>            
+        </div>
+        <div class="card">
+            <h:form>
+                <p:menubar>
+                    <p:submenu label="Prestamos" icon="pi pi-book">
+                        <p:submenu label="Maestras" icon="pi pi-fw pi-plus">
+                            <p:menuitem value="Dependencias" icon="pi pi-building" url="admindependencia.xhtml"/>
+                            <p:menuitem value="Dispositivo" icon="pi pi-desktop" url="admindispositivo.xhtml"/>
+                            <p:menuitem value="Marca" icon="pi pi-briefcase" url="adminmarca.xhtml"/>
+                        </p:submenu>
+                        <p:menuitem value="Devolución" icon="pi pi-flag" url="devoluciones.xhtml"/>
+                        <p:divider />
+                        <p:menuitem value="Consultas" icon="pi pi-search" url="consultas.xhtml"/>
+                    </p:submenu>
+
+                    <p:submenu label="Usuarios" icon="pi pi-users">
+                        <p:menuitem value="Gestión" icon="pi pi-user-plus" url="usuarios.xhtml"/>                     
+                    </p:submenu>
+
+                    <p:divider layout="vertical"/>
+
+                    <p:menuitem value="Quit" icon="pi pi-fw pi-power-off"
+                                action="#{loginBean.cerrarSesion()}"
+                                />
+                </p:menubar>
+            </h:form>
+        </div>
+        <div id="contenedor_central_ppal">
+            <p:messages id="msgs" showDetail="true"  />
+            <center>
+                <h1>Gestión de dependencias</h1>
+                <h:form id="formnuevadependencia">
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                <p:outputLabel value="Nombre dependencia"/>
+                            </p:column>
+                            <p:column style="min-width: 200px;">
+                                <p:inputText id="nombredependencia" 
+                                             styleClass="anchoColumnasPrincipal"
+                                             value="#{dependenciaBean.dentidad.nombredependencia}"
+                                             required="true">                                    
+                                    <f:validateRegex pattern="^([\w\.\-\ñÑáéíóúÁÉÍÓÚ]*( [\w\.\-\ñÑáéíóúÁÉÍÓÚ]*)*)" ></f:validateRegex>
+                                    <p:ajax  update="msgnombredependencia"  event="keyup"/>                            
+                                </p:inputText> 
+                                <p:message id="msgnombredependencia" for="nombredependencia" display="icon"  />
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                <p:outputLabel value="Estado dependencia"/>
+                            </p:column>
+                            <p:column style="min-width: 200px;">
+                                <p:selectBooleanCheckbox
+                                    id="estadodependencia"
+                                    value="#{dependenciaBean.dentidad.estado}"
+                                    />
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                    <br />
+                    <p:commandButton value="Guardar"
+                                     icon="pi pi-save"
+                                     update="formnuevadependencia tablagestiondependencias msgs"
+                                     action="#{dependenciaBean.insertarNuevaDependencia()}" />
+                </h:form>
+                <br />
+                <br />
+                <h:form id="tablagestiondependencias">
+                    <h3>Dependencias Existentes:</h3> 
+                    <p:commandButton icon="pi pi-refresh"
+                                     value="Actualizar Tabla"
+                                     ajax="false"
+                                     onclick="PrimeFaces.monitorDownload(start, stop);"
+                                     actionListener="#{dependenciaBean.cargarListaCompletaDependencias()}"
+                                     update="tablagestiondependencias" />               
+                    <br />
+                    <br />
+                    <p:dataTable var="maestradependencias" 
+                                 value="#{dependenciaBean.listadependencias}"
+                                 stickyHeader="false"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                 rowsPerPageTemplate="5,10,15"
+                                 >
+                        <p:column headerText="ID" >
+                            <h:outputText value="#{maestradependencias.idregistro}" />
+                        </p:column>
+
+                        <p:column headerText="Nombre" 
+                                  >
+                            <h:outputText value="#{maestradependencias.nombredependencia}" />
+                        </p:column>
+                        <p:column headerText="Estado" 
+                                  >
+                            <h:outputText value="#{maestradependencias.estado}" />
+                        </p:column>
+                        <p:column headerText="Acciones" >
+                            <center>
+                                <p:commandButton 
+                                    ajax="false"
+                                    icon="pi pi-pencil"
+                                    title="Editar"
+                                    style="margin-right: 7px;"
+                                    actionListener="#{dependenciaBean.cargarVentanaEditar(maestradependencias)}"
+                                    >
+
+                                </p:commandButton>
+
+                                <p:commandButton icon="pi pi-trash"
+                                                 ajax="false"
+                                                 title="Eliminar"
+                                                 actionListener="#{dependenciaBean.cargarVentanaEliminar(maestradependencias)}"
+                                                 />
+                            </center>
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+                <p:panel rendered="#{dependenciaBean.paneleditar}">
+                    <h:form id="formeditardependencia">
+                        <h2>Registro a modificar</h2>
+                        <p:panelGrid columns="2" style="border: transparent;" >
+                            <p:outputLabel value="Id:" />
+                            <p:inputText readonly="true" value="#{dependenciaBean.dentidadeditar.idregistro}" />
+                            <p:outputLabel value="Nombre: " />
+                            <p:inputText value="#{dependenciaBean.dentidadeditar.nombredependencia}"
+                                         required="true"
+                                         >
+                                <f:validateRequired />
+                                <f:validateRegex pattern="^([\w\d\%\°\,\+\.\-áéíóúÁÉÍÓÚñ]*)( [\w\d\%\°\,\+\.\-áéíóúÁÉÍÓÚñ]*)*" />
+                            </p:inputText>  
+                            <p:outputLabel value="Estado: "/>
+                            <p:selectBooleanCheckbox
+                                    id="estadodependenciaeditar"
+                                    value="#{dependenciaBean.dentidadeditar.estado}"
+                                    />
+
+                        </p:panelGrid>
+                        <br />
+                        <br />
+                        <center>
+                            <p:commandButton  
+                                icon="pi pi-check"
+                                ajax="false"
+                                title="Guardar"
+                                actionListener="#{dependenciaBean.actualizarDependencia()}"
+                                >
+
+                            </p:commandButton>
+                        </center>
+                    </h:form>
+                </p:panel>
+                <p:panel rendered="#{dependenciaBean.paneleliminar}">
+                    <h:form id="formeliminarmarca">
+                        <h2>Eliminación de registro</h2>
+                        <h3>¿Seguro que desea eliminar la dependencia </h3>
+                        <p:outputLabel value="#{dependenciaBean.dentidadeliminar.nombredependencia}" />
+                        <p:outputLabel value="?" />
+                        <br />
+                        <br />
+                        <center>
+                            <p:commandButton  icon="pi pi-check"
+                                              ajax="false"
+                                              title="Si"
+                                              action="#{dependenciaBean.eliminarDependencia()}"
+                                              >
+
+                            </p:commandButton>
+
+                        </center>
+                    </h:form>
+                </p:panel>                
+            </center>
+
+
+        </div>
+        <div id="bottom">
+            Bottom
+        </div>
+    </h:body>    
+</html>
+

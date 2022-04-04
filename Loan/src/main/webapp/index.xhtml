@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Prestamos</title>
+        <link href="recursos/css/cssGeneral.css" rel="stylesheet" type="text/css"/>
+        <script src="recursos/js/jslocale.js" type="text/javascript"></script>
+        <script src="recursos/js/reload.js" type="text/javascript"></script>
+    </h:head>
+    <h:body>
+
+        <div id="cabecerappal">
+            <div id="cabecera1">                
+
+                <img src="recursos/images/Logo.png"
+                     style="max-width: 55%;
+                     max-height: 55%;
+                     border-radius: 5px;"
+                     alt=""/>    
+            </div>
+            <div id="cabecera2">
+                <h:form>
+                    <p:commandLink value="Zona administradores" 
+                                   style="float: right; "
+                                   action="#{loginBean.cargarLoginPage()}" />
+                </h:form>
+            </div>
+        </div>
+        <div id="contenedor_central_ppal">
+            <p:messages id="msgs" showDetail="true" />
+            <center>
+                <p:outputLabel value="Registro de prestamo"
+                               style="color: #D20005;
+                               font-size: 150%;"
+                               />
+                <br/>
+                <br/>
+                <h:form id="formprestamo">
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                <p:outputLabel value="Nombre Completo" />
+                            </p:column>
+                            <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                <p:outputLabel value="Dispositivo" />
+                            </p:column>
+                            <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                <p:outputLabel value="Marca" />
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column style="min-width: 200px;">
+                                <p:inputText id="nombrecompletoprestamo" 
+                                             styleClass="anchoColumnasPrincipal"
+                                             value="#{prestamoBean.pentidad.nombrecompletoprestamo}"
+                                             required="true">                                    
+                                    <f:validateRegex pattern="^([\w\.\-ñÑáéíóúÁÉÍÓÚ]*( [\w\.\-ñÑáéíóúÁÉÍÓÚ]*))*" ></f:validateRegex>
+                                    <p:ajax  update="msgnombrecompletoprestamo"  event="keyup"/>                            
+                                </p:inputText> 
+                                <p:message id="msgnombrecompletoprestamo" for="nombrecompletoprestamo" display="icon"  />
+                            </p:column>
+                            <p:column style="min-width: 200px;">
+                                <p:selectOneMenu id="dispositivo"  
+                                                 filter="true" filterMatchMode="contains"
+                                                 value="#{prestamoBean.pentidad.dispositivo}"
+                                                 style="width:100%;" 
+                                                 required="true"
+                                                 >
+                                    <f:selectItem itemLabel="Seleccione" itemValue="0" noSelectionOption="true"    />
+                                    <f:selectItems value="#{dispositivoBean.listadispositivosactivosdisponibles}"
+                                                   var="selectdispositivo"                                                     
+                                                   itemValue="#{selectdispositivo.idregistro} #{selectdispositivo.nombredispositivo} - #{selectdispositivo.codigoactivo}"
+                                                   itemLabel="#{selectdispositivo.idregistro} #{selectdispositivo.nombredispositivo} - #{selectdispositivo.codigoactivo}"
+                                                   />  
+                                    <f:validateRequired for="dispositivo"></f:validateRequired>
+                                    <p:ajax  update="msgdispositivo" />
+
+                                </p:selectOneMenu> 
+
+                                <p:message id="msgdispositivo" for="dispositivo" display="icon"  />
+                            </p:column>
+                            <p:column style="min-width: 200px;">
+                                <p:selectOneMenu id="marca"  
+                                                 filter="true" filterMatchMode="contains"
+                                                 value="#{prestamoBean.pentidad.marca}"
+                                                 style="width:100%;" 
+                                                 required="true"
+                                                 >
+                                    <f:selectItem itemLabel="Seleccione" itemValue="0" noSelectionOption="true"    />
+                                    <f:selectItems value="#{marcaBean.listaMarca}"
+                                                   var="selectmarca"  
+                                                   itemValue="#{selectmarca.nombremarca}"
+                                                   itemLabel="#{selectmarca.nombremarca}"
+                                                   />  
+                                    <f:validateRequired for="marca"></f:validateRequired>
+                                    <p:ajax  update="msgmarca" />
+
+                                </p:selectOneMenu> 
+
+                                <p:message id="msgmarca" for="marca" display="icon"  />
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column style="min-width: 200px; background-color: #737b8d; color: white;">
+                                <p:outputLabel value="Fecha prestamo" />
+                            </p:column>
+                            <p:column colspan="2" style="min-width: 100px; background-color: #737b8d; color: white;">
+                                <p:outputLabel value="Dependencia" />
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column style="min-width: 200px;">
+                                <p:clock pattern="dd/MM/yyyy HH:mm:ss" 
+                                         value="#{prestamoBean.pentidad.datetimeprestamo}" />
+                            </p:column>
+                            <p:column colspan="2" style="min-width: 200px;">
+                                <p:selectOneMenu id="dependencia"  
+                                                 filter="true" filterMatchMode="contains"
+                                                 value="#{prestamoBean.pentidad.dependencia}"
+                                                 style="width:100%;" 
+                                                 required="true"
+                                                 >
+                                    <f:selectItem itemLabel="Seleccione" itemValue="0" noSelectionOption="true"    />
+                                    <f:selectItems value="#{dependenciaBean.listadependenciasactivas}"
+                                                   var="selectdependencia"  
+                                                   itemValue="#{selectdependencia.nombredependencia}"
+                                                   itemLabel="#{selectdependencia.nombredependencia}"
+                                                   />  
+                                    <f:validateRequired for="dependencia"></f:validateRequired>
+                                    <p:ajax  update="msgdependencia" />
+
+                                </p:selectOneMenu> 
+
+                                <p:message id="msgdependencia" for="dependencia" display="icon"  />
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                    <br />
+                    <p:outputLabel value="Firma solicitante"/>
+                    <br />
+                    <p:signature style="width:400px;height:200px" widgetVar="sig" value="#{prestamoBean.pentidad.firmaprestamo}"
+                                 required="true" guideline="true"/>
+
+                    <div style="margin:20px 0">                                
+                        <p:commandButton value="Limpiar firma" icon="pi pi-times" type="button" onclick="PF('sig').clear()" styleClass="ui-button-flat p-ml-2"/>
+                    </div>
+                    <br />
+                    <p:commandButton value="Enviar"
+                                     action="#{prestamoBean.registrarPrestamo()}"
+                                     ajax="false"
+                                     icon="pi pi-save"
+                                     />
+                    <br />
+                    <br />
+                </h:form>
+            </center>
+        </div>
+        <div id="bottom">
+            Bottom
+        </div>
+    </h:body>
+</html>
+

@@ -1,0 +1,33 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 28 oct. 2021, 15:31:49
+    Author     : jgonzalezl
+*/
+
+.tablaDatosLab{
+    font-weight: bold;
+    text-align: center;    
+    font-family: Verdana;
+    font-size: 200px;
+    font-size-adjust: 0.58;
+    
+}
+
+.anchoColumnasPrincipal{
+    width: 180px !important;
+    background-color: #f8f3f3;
+    border-radius: 5px;
+}
+
+.anchoColumnas{
+    width: 100px !important;
+    background-color: #f8f3f3;
+    border-radius: 5px;
+}
+
+
+

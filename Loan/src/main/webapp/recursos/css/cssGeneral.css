@@ -1,0 +1,93 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 21 mar. 2022, 9:36:48
+    Author     : jgonzalezl
+*/
+
+#cabecerappal{
+    max-height: 100px;
+    min-height: 100px;
+    max-width: 100%;
+    min-width: 100%;
+    overflow: auto;
+    background-size: cover;
+    background-repeat: no-repeat;
+    float: top;
+    margin: 10px 0px 0px 0px;
+    box-shadow: 
+        0px 0px 0px 5px rgba( 255,255,255,0.4 ), 
+        0px 4px 20px rgba( 0,0,0,0.33 );
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+}
+
+#cabecera1{
+    position: absolute;
+    max-height: 70px;
+    min-height: 70px;
+    max-width: 70%;
+    min-width: 70%;
+    text-align: center;
+    
+}
+
+#cabecera2{
+    position: absolute;
+    max-height: 70px;
+    min-height: 70px;
+    max-width: 70%;
+    min-width: 70%;
+    float: right;
+    right: 10px;
+    
+}
+
+#cabecera p{
+    color: #D20005;
+    vertical-align: central;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#bottom{
+    max-height: 100px;
+    min-height: 100px;
+    max-width: 100%;
+    overflow: auto;
+    background-size: cover;
+    background-repeat: no-repeat;
+    float: bottom;
+    margin: 15px 0px 0px 0px;
+    box-shadow: 
+        0px 0px 0px 5px rgba( 255,255,255,0.4 ), 
+        0px 4px 20px rgba( 0,0,0,0.33 );
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
+}
+
+#contenedor_central_ppal{
+    min-height: 400px;
+    max-width: 100%;
+    overflow: auto;
+    background-size: cover;
+    background-repeat: no-repeat;
+    float: inside;
+    margin: 15px 0px 0px 0px;
+    box-shadow: 
+        0px 0px 0px 5px rgba( 255,255,255,0.4 ), 
+        0px 4px 20px rgba( 0,0,0,0.33 );
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
+}
